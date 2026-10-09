@@ -1,0 +1,48 @@
+name: Verify Finora
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: finora_ci
+          POSTGRES_PASSWORD: local_ci_only
+          POSTGRES_DB: finora_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U finora_ci -d finora_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://finora_ci:local_ci_only@127.0.0.1:5432/finora_ci
+      BETTER_AUTH_SECRET: finora-ci-only-secret-do-not-use-in-production-2026
+      BETTER_AUTH_URL: http://127.0.0.1:3000
+      REQUIRE_EMAIL_VERIFICATION: "false"
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: npm install --global pnpm@11.25.0
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm db:generate
+      - run: pnpm db:migrate
+      - run: pnpm test
+      - run: pnpm typecheck
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chrome
+      - run: pnpm test:e2e

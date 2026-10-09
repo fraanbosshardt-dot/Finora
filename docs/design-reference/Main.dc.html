@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Finora — Sabé cuánto podés gastar antes de gastar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+.w{font-family:'Manrope',system-ui,sans-serif;font-variant-numeric:tabular-nums;color:#111827;background:#F7F8FA;scroll-behavior:smooth}
+.w a{text-decoration:none;color:inherit;transition:transform .15s ease,background .2s ease,box-shadow .2s ease}
+.w button{font-family:inherit;cursor:pointer;transition:transform .15s ease,background .2s ease}
+.w a:focus-visible,.w button:focus-visible{outline:3px solid #16A085;outline-offset:3px}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(15,118,110,.28)}
+.btn:active,.w button:active{transform:scale(.97)}
+.card{transition:transform .25s ease,box-shadow .25s ease}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(16,24,40,.10)}
+@keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.rise>*{animation:up .7s cubic-bezier(.2,.8,.2,1) both}
+.rise>*:nth-child(2){animation-delay:.08s}.rise>*:nth-child(3){animation-delay:.16s}.rise>*:nth-child(4){animation-delay:.24s}
+.float{animation:float 6s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.w *{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div class="w">
+
+<header style="max-width:1160px;margin:0 auto;padding:20px 24px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+<a href="#inicio" style="font-weight:800;font-size:24px;color:#0F766E;letter-spacing:-.02em">Finora</a>
+<nav aria-label="Principal" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-weight:700;font-size:14px">
+<a href="#funciones" style="padding:12px 14px;color:#374151">Funciones</a>
+<a href="#comprar" style="padding:12px 14px;color:#374151">¿Puedo comprarlo?</a>
+<a href="#calculadora" style="padding:12px 14px;color:#374151">Calculadora</a>
+<a href="#seguridad" style="padding:12px 14px;color:#374151">Seguridad</a>
+<a href="#planes" style="padding:12px 14px;color:#374151">Planes</a>
+<a href="#faq" style="padding:12px 14px;color:#374151">Preguntas</a>
+<a class="btn" href="#registro" style="padding:12px 20px;border-radius:14px;background:#0F766E;color:#fff">Empezar gratis</a>
+</nav>
+</header>
+
+<section id="inicio" style="max-width:1160px;margin:0 auto;padding:56px 24px 72px;display:flex;flex-wrap:wrap;gap:48px;align-items:center">
+<div class="rise" style="flex:1 1 460px;min-width:0">
+<div style="display:inline-block;padding:6px 14px;border-radius:20px;background:#E6F4F1;color:#0F766E;font-weight:800;font-size:13px">Finanzas personales para web, iOS y Android</div>
+<h1 style="margin:18px 0 0;font-size:56px;line-height:1.05;letter-spacing:-.03em;font-weight:800">Sabé cuánto podés gastar antes de gastar.</h1>
+<p style="margin:20px 0 0;font-size:18px;line-height:1.6;color:#4B5563;max-width:520px">Controlá ingresos, gastos, bancos, efectivo, crypto, tarjetas, cuotas, deudas y monedas. Mirá hoy y proyectá lo que viene.</p>
+<div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:28px">
+<a class="btn" href="#registro" style="min-height:52px;padding:0 28px;border-radius:16px;background:#0F766E;color:#fff;font-weight:800;display:flex;align-items:center">Empezar gratis</a>
+<a href="#funciones" style="min-height:52px;padding:0 28px;border-radius:16px;border:1.5px solid #D1D5DB;background:#fff;font-weight:800;display:flex;align-items:center">Ver cómo funciona</a>
+</div>
+</div>
+<div class="float" style="flex:1 1 340px;min-width:0;max-width:420px;margin:0 auto">
+<div style="background:#fff;border-radius:28px;padding:22px;box-shadow:0 24px 60px rgba(16,24,40,.14)">
+<div style="background:#0F766E;color:#fff;border-radius:20px;padding:20px">
+<div style="font-size:13px;font-weight:600;opacity:.9">Disponible real</div>
+<div style="font-size:36px;font-weight:800;letter-spacing:-.02em">$1.482.300</div>
+<div style="font-size:12px;opacity:.9">Después de compromisos próximos</div>
+</div>
+<div style="padding:14px 4px 0">
+<sc-for list="{{soon}}" as="s" hint-placeholder-count="3">
+<div style="display:flex;justify-content:space-between;padding:9px 0;font-size:14px;font-weight:700"><span style="color:#667085">{{s.d}}</span><span>{{s.n}}</span><span>{{s.a}}</span></div>
+</sc-for>
+</div>
+</div>
+</div>
+</section>
+
+<section id="funciones" style="max-width:1160px;margin:0 auto;padding:40px 24px 72px">
+<h2 style="margin:0;font-size:38px;letter-spacing:-.02em;text-align:center">Simple por fuera, potente por dentro</h2>
+<p style="text-align:center;color:#4B5563;font-size:17px;margin:12px auto 36px;max-width:560px">Todo lo que necesitás para entender tu plata, sin planillas ni tutoriales.</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px">
+<sc-for list="{{features}}" as="f" hint-placeholder-count="6">
+<div class="card" style="background:#fff;border-radius:24px;padding:26px;box-shadow:0 1px 3px rgba(16,24,40,.06)">
+<div aria-hidden="true" style="width:48px;height:48px;border-radius:16px;background:#E6F4F1;color:#0F766E;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px">{{f.i}}</div>
+<h3 style="margin:16px 0 8px;font-size:20px">{{f.t}}</h3>
+<p style="margin:0;color:#4B5563;line-height:1.55;font-size:15px">{{f.d}}</p>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section id="monedas" style="max-width:1160px;margin:0 auto;padding:24px 24px 72px;display:flex;flex-wrap:wrap;gap:48px;align-items:center">
+<div style="flex:1 1 420px;min-width:0">
+<h2 style="margin:0;font-size:38px;letter-spacing:-.02em">Tu patrimonio, en la moneda que quieras</h2>
+<p style="margin:14px 0 0;font-size:17px;line-height:1.6;color:#4B5563;max-width:480px">Cambiá cómo lo ves sin tocar tus movimientos originales. Cada cotización muestra su fuente y su fecha.</p>
+</div>
+<div class="card" style="flex:1 1 380px;min-width:0;background:#fff;border-radius:24px;padding:26px;box-shadow:0 1px 3px rgba(16,24,40,.06)">
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<sc-for list="{{curs}}" as="c" hint-placeholder-count="3"><button onClick="{{c.pick}}" style="{{c.style}}">{{c.l}}</button></sc-for>
+</div>
+<div style="font-size:13px;color:#667085;margin-top:20px">Patrimonio neto</div>
+<div style="font-size:42px;font-weight:800;letter-spacing:-.02em">{{pat}}</div>
+<div style="font-size:12px;color:#667085;margin-top:4px">Cotizaciones de ejemplo para esta demo.</div>
+</div>
+</section>
+
+<section id="proyeccion" style="max-width:1160px;margin:0 auto;padding:0 24px 72px">
+<div style="background:#fff;border-radius:28px;padding:36px;box-shadow:0 1px 3px rgba(16,24,40,.06);display:flex;flex-wrap:wrap;gap:40px;align-items:center">
+<div style="flex:1 1 360px;min-width:0">
+<h2 style="margin:0;font-size:34px;letter-spacing:-.02em">Mirá lo que viene</h2>
+<p style="color:#4B5563;line-height:1.6;font-size:16px">Proyectá 3, 6, 12 o 24 meses. Finora separa lo ya realizado, lo confirmado y lo estimado, y nunca inventa inflación ni tasas.</p>
+</div>
+<div style="flex:1 1 400px;min-width:0;display:flex;align-items:flex-end;gap:14px;height:180px">
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="6"><div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;justify-content:flex-end;height:100%"><div style="font-size:12px;font-weight:700">{{b.v}}</div><div style="{{b.style}}"></div><div style="font-size:12px;color:#667085">{{b.m}}</div></div></sc-for>
+</div>
+</div>
+</section>
+
+<section id="calculadora" style="max-width:1160px;margin:0 auto;padding:0 24px 72px;display:flex;flex-wrap:wrap;gap:48px;align-items:center">
+<div style="flex:1 1 420px;min-width:0">
+<h2 style="margin:0;font-size:38px;letter-spacing:-.02em">Calculadora de préstamos y cuotas</h2>
+<p style="margin:14px 0 0;font-size:17px;line-height:1.6;color:#4B5563;max-width:480px">Sistema francés sobre $1.000.000. La TNA sola no define el costo total: el CFT incluye cargos e impuestos, por eso Finora te deja cargar cada dato.</p>
+</div>
+<div class="card" style="flex:1 1 380px;min-width:0;background:#fff;border-radius:24px;padding:26px;box-shadow:0 1px 3px rgba(16,24,40,.06)">
+<div style="font-size:13px;font-weight:700;color:#667085">Cuotas</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px"><sc-for list="{{lns}}" as="c" hint-placeholder-count="3"><button onClick="{{c.pick}}" style="{{c.style}}">{{c.l}}</button></sc-for></div>
+<div style="font-size:13px;font-weight:700;color:#667085">TNA</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 18px"><sc-for list="{{tnas}}" as="c" hint-placeholder-count="3"><button onClick="{{c.pick}}" style="{{c.style}}">{{c.l}}</button></sc-for></div>
+<div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #E5E7EB"><span style="color:#667085">Cuota mensual</span><strong>{{loanCuota}}</strong></div>
+<div style="display:flex;justify-content:space-between;padding:8px 0"><span style="color:#667085">Total a pagar</span><strong>{{loanTotal}}</strong></div>
+<div style="display:flex;justify-content:space-between;padding:8px 0"><span style="color:#667085">Intereses</span><strong>{{loanInt}}</strong></div>
+</div>
+</section>
+
+<section id="ia" style="max-width:1160px;margin:0 auto;padding:0 24px 72px;display:flex;flex-wrap:wrap;gap:48px;align-items:center">
+<div class="card" style="flex:1 1 380px;min-width:0;background:#fff;border-radius:24px;padding:24px;box-shadow:0 1px 3px rgba(16,24,40,.06);display:flex;flex-direction:column;gap:12px">
+<div style="align-self:flex-end;background:#0F766E;color:#fff;border-radius:18px 18px 4px 18px;padding:12px 16px;font-size:14px;font-weight:600">Gasté 48.000 de nafta con Visa en 3 cuotas</div>
+<div style="background:#E6F4F1;color:#0B4F49;border-radius:18px 18px 18px 4px;padding:14px 16px;font-size:14px;line-height:1.5">Entendido: gasto de $48.000, categoría Combustible, Visa, 3 cuotas de $16.000. ¿Lo guardo?</div>
+<div style="display:flex;gap:8px"><span style="padding:10px 18px;border-radius:12px;background:#0F766E;color:#fff;font-weight:800;font-size:14px">Guardar</span><span style="padding:10px 18px;border-radius:12px;border:1.5px solid #D1D5DB;font-weight:800;font-size:14px">Editar</span></div>
+</div>
+<div style="flex:1 1 420px;min-width:0">
+<h2 style="margin:0;font-size:38px;letter-spacing:-.02em">Una IA que explica, no que inventa</h2>
+<p style="margin:14px 0 0;font-size:17px;line-height:1.6;color:#4B5563;max-width:480px">Los números los calcula el motor financiero. La IA los traduce a lenguaje claro, siempre te muestra una vista previa antes de guardar y podés desactivarla cuando quieras.</p>
+</div>
+</section>
+
+<section id="seguridad" style="background:#111827;color:#fff;padding:72px 24px">
+<div style="max-width:1160px;margin:0 auto">
+<h2 style="margin:0;font-size:38px;letter-spacing:-.02em;text-align:center">Seguridad y privacidad desde el diseño</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:36px">
+<sc-for list="{{sec}}" as="x" hint-placeholder-count="6"><div style="background:#1F2937;border-radius:20px;padding:22px"><div style="font-weight:800;font-size:17px">{{x.t}}</div><p style="margin:8px 0 0;color:#D1D5DB;font-size:14px;line-height:1.55">{{x.d}}</p></div></sc-for>
+</div>
+</div>
+</section>
+
+<section id="comprar" style="background:#0F766E;color:#fff;padding:72px 24px">
+<div style="max-width:1160px;margin:0 auto;display:flex;flex-wrap:wrap;gap:48px;align-items:center">
+<div style="flex:1 1 420px;min-width:0">
+<h2 style="margin:0;font-size:38px;letter-spacing:-.02em">¿Puedo comprarlo?</h2>
+<p style="font-size:17px;line-height:1.6;opacity:.95;margin:14px 0 0;max-width:480px">Probá una compra antes de hacerla. Finora calcula tu disponible y tus compromisos, y recién después te lo explica en palabras.</p>
+</div>
+<div style="flex:1 1 380px;min-width:0;background:#fff;color:#111827;border-radius:24px;padding:26px">
+<div style="font-weight:800;font-size:18px">Celular nuevo por $480.000</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin:16px 0">
+<sc-for list="{{cuotas}}" as="c" hint-placeholder-count="4">
+<button onClick="{{c.pick}}" style="{{c.style}}">{{c.l}}</button>
+</sc-for>
+</div>
+<div style="{{vStyle}}">
+<div style="font-weight:800;font-size:17px">{{vTitle}}</div>
+<div style="font-size:14px;line-height:1.5;margin-top:4px">{{vText}}</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="planes" style="max-width:1160px;margin:0 auto;padding:72px 24px">
+<h2 style="margin:0;font-size:38px;letter-spacing:-.02em;text-align:center">Gratis de verdad, Pro accesible</h2>
+<div style="display:flex;flex-wrap:wrap;gap:20px;margin-top:36px;justify-content:center">
+<div class="card" style="flex:1 1 340px;max-width:460px;background:#fff;border-radius:24px;padding:30px;border:1.5px solid #E5E7EB">
+<div style="font-weight:800;font-size:20px">Free</div>
+<div style="font-size:34px;font-weight:800;margin:6px 0 16px">$0</div>
+<sc-for list="{{free}}" as="x" hint-placeholder-count="5"><div style="padding:7px 0;font-size:15px;color:#374151">{{x.t}}</div></sc-for>
+</div>
+<div class="card" style="flex:1 1 340px;max-width:460px;background:#111827;color:#fff;border-radius:24px;padding:30px">
+<div style="font-weight:800;font-size:20px">Pro</div>
+<div style="font-size:34px;font-weight:800;margin:6px 0 2px">Desde US$ 2,99<span style="font-size:15px;font-weight:600;opacity:.8"> al mes</span></div>
+<div style="font-size:12px;opacity:.75;margin-bottom:14px">Precio final según país y tienda</div>
+<sc-for list="{{pro}}" as="x" hint-placeholder-count="5"><div style="padding:7px 0;font-size:15px">{{x.t}}</div></sc-for>
+</div>
+</div>
+<p style="text-align:center;color:#667085;font-size:14px;margin-top:20px">Exportar tus datos es siempre gratis.</p>
+</section>
+
+<section id="faq" style="max-width:760px;margin:0 auto;padding:24px 24px 72px">
+<h2 style="margin:0 0 24px;font-size:34px;letter-spacing:-.02em;text-align:center">Preguntas frecuentes</h2>
+<sc-for list="{{faq}}" as="q" hint-placeholder-count="4">
+<div style="background:#fff;border-radius:18px;margin-bottom:10px;box-shadow:0 1px 3px rgba(16,24,40,.06)">
+<button onClick="{{q.pick}}" aria-expanded="{{q.open}}" style="width:100%;min-height:56px;padding:0 22px;border:0;background:transparent;display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:16px;text-align:left;color:#111827">{{q.q}}<span aria-hidden="true" style="color:#0F766E;font-size:22px">{{q.sign}}</span></button>
+<sc-if value="{{q.open}}" hint-placeholder-val="{{ false }}"><div style="padding:0 22px 20px;color:#4B5563;line-height:1.6;font-size:15px">{{q.a}}</div></sc-if>
+</div>
+</sc-for>
+</section>
+
+<section id="registro" style="max-width:1160px;margin:0 auto 64px;padding:0 24px">
+<div style="background:linear-gradient(135deg,#0F766E,#16A085);color:#fff;border-radius:32px;padding:56px 32px;text-align:center">
+<h2 style="margin:0;font-size:38px;letter-spacing:-.02em">Empezá a ver tu plata en un solo lugar</h2>
+<p style="margin:12px auto 26px;max-width:480px;opacity:.95;font-size:17px">Creá tu cuenta gratis en menos de un minuto.</p>
+<a class="btn" href="#inicio" style="display:inline-flex;align-items:center;min-height:54px;padding:0 32px;border-radius:16px;background:#fff;color:#0F766E;font-weight:800">Empezar gratis</a>
+</div>
+</section>
+
+<footer style="max-width:1160px;margin:0 auto;padding:0 24px 40px;color:#667085;font-size:13px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px">
+<span>Finora. Finanzas personales.</span>
+<span style="display:flex;flex-wrap:wrap;gap:6px 18px"><a href="#funciones">Funciones</a><a href="#calculadora">Calculadora de cuotas</a><a href="#seguridad">Seguridad</a><a href="#planes">Planes</a><a href="#faq">Preguntas</a></span>
+<span>Tus datos son tuyos: podés exportarlos o borrarlos cuando quieras.</span>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":3100}}'>
+class Component extends DCLogic {
+  state = { n: 3, open: 0, cur: 'ARS', ln: 12, tna: 60 };
+  renderVals() {
+    const s = this.state, set = (o) => () => this.setState(o);
+    const fm = (v) => '$' + v.toLocaleString('es-AR');
+    const cuota = Math.round(480000 / s.n), ok = s.n >= 3;
+    const cuotas = [1, 3, 6, 12].map((n) => ({ l: n === 1 ? '1 pago' : n + ' cuotas', pick: set({ n }),
+      style: 'min-height:46px;padding:0 18px;border-radius:14px;font-weight:700;font-size:14px;border:1.5px solid ' + (s.n === n ? '#0F766E' : '#E5E7EB') + ';background:' + (s.n === n ? '#E6F4F1' : '#fff') + ';color:' + (s.n === n ? '#0F766E' : '#111827') }));
+    const faq = [
+      ['¿Finora es gratis?', 'Sí. El plan Free incluye cuentas, movimientos, categorías, transferencias, recurrencias básicas, dashboard y presupuesto básico.'],
+      ['¿Qué monedas soporta?', 'Pesos, dólares, euros y crypto. Guardás la cantidad real de cada activo y podés ver tu patrimonio en ARS, USD MEP, USD oficial u otras, sin modificar tus movimientos.'],
+      ['¿Finora se conecta a mi banco?', 'No guardamos credenciales bancarias. Cargás tus movimientos a mano o los importás desde un archivo.'],
+      ['¿La IA inventa números?', 'No. Los cálculos los hace el motor financiero y la IA solo los explica en lenguaje natural. Podés desactivarla cuando quieras.']
+    ].map(([q, a], i) => ({ q, a, open: s.open === i, sign: s.open === i ? '−' : '+', pick: set({ open: s.open === i ? -1 : i }) }));
+    const pill = (on) => 'min-height:44px;padding:0 18px;border-radius:14px;font-weight:700;font-size:14px;border:1.5px solid ' + (on ? '#0F766E' : '#E5E7EB') + ';background:' + (on ? '#E6F4F1' : '#fff') + ';color:' + (on ? '#0F766E' : '#111827');
+    const rate = { ARS: 1, 'USD MEP': 1480, 'USD oficial': 1390 }[s.cur], pv = 8912400 / rate;
+    const pat = s.cur === 'ARS' ? fm(Math.round(pv)) : 'US$ ' + Math.round(pv).toLocaleString('es-AR');
+    const curs = ['ARS', 'USD MEP', 'USD oficial'].map((l) => ({ l, pick: set({ cur: l }), style: pill(s.cur === l) }));
+    const lns = [6, 12, 24].map((n) => ({ l: n + ' cuotas', pick: set({ ln: n }), style: pill(s.ln === n) }));
+    const tnas = [0, 60, 90].map((n) => ({ l: n + '%', pick: set({ tna: n }), style: pill(s.tna === n) }));
+    const i = s.tna / 1200, lc = i ? 1000000 * i / (1 - Math.pow(1 + i, -s.ln)) : 1000000 / s.ln;
+    const bars = [['Oct', 1.5], ['Nov', 1.2], ['Dic', 0.6], ['Ene', 1.1], ['Feb', 1.4], ['Mar', 1.8]].map(([m, v]) => ({ m, v: v.toFixed(1) + ' M', style: 'width:100%;border-radius:10px;height:' + Math.round(v * 60) + 'px;background:' + (v < 0.8 ? '#F59E0B' : '#16A085') }));
+    return {
+      curs, lns, tnas, pat, bars, loanCuota: fm(Math.round(lc)), loanTotal: fm(Math.round(lc * s.ln)), loanInt: fm(Math.round(lc * s.ln - 1000000)),
+      sec: [{ t: 'Conexión cifrada', d: 'Todo el tráfico viaja por TLS y las sesiones usan cookies seguras.' }, { t: 'Sin credenciales bancarias', d: 'Nunca te pedimos usuario ni clave de tu banco.' }, { t: 'Sesiones revocables', d: 'Mirá tus dispositivos y cerrá sesión en cualquiera.' }, { t: 'Aislamiento por espacio', d: 'Cada consulta se valida contra tu espacio de trabajo.' }, { t: 'Tus datos, tu decisión', d: 'Exportalos o borrá tu cuenta cuando quieras.' }, { t: 'IA con datos mínimos', d: 'Enviamos solo lo necesario y podés desactivarla.' }],
+      cuotas, faq,
+      soon: [{ d: '05 Oct', n: 'Visa', a: '$480.000' }, { d: '10 Oct', n: 'Alquiler', a: '$500.000' }, { d: '18 Oct', n: 'Seguro', a: '$87.000' }],
+      features: [
+        { i: '$', t: 'Cuentas y monedas', d: 'Bancos, efectivo, billeteras y crypto en un solo lugar, en pesos, dólares o la moneda que uses.' },
+        { i: '%', t: 'Tarjetas y cuotas', d: 'Cargá una compra en 12 cuotas una vez y mirá cuándo termina y cuánto comprometés cada mes.' },
+        { i: '=', t: 'Deudas y préstamos', d: 'Cuadro de amortización, tasas y simulación de cancelación anticipada.' },
+        { i: '↗', t: 'Proyección', d: 'Mirá cómo cerrás el mes y los próximos 12 meses, separando lo confirmado de lo estimado.' },
+        { i: '?', t: '¿Puedo comprarlo?', d: 'Simulá una compra sin tocar tus datos reales y mirá el impacto mes a mes.' },
+        { i: '✦', t: 'Preguntale a Finora', d: 'Escribí "gasté 48.000 de nafta con Visa en 3 cuotas" y confirmás antes de guardar.' }
+      ],
+      free: [{ t: 'Cuentas manuales' }, { t: 'Ingresos, gastos y transferencias' }, { t: 'Dashboard y presupuesto básico' }, { t: 'Recurrencias básicas' }, { t: 'Exportación de datos' }],
+      pro: [{ t: 'Tarjetas y cuotas avanzadas' }, { t: 'Préstamos y amortización' }, { t: 'Proyección a 12 y 36 meses' }, { t: 'Escenarios ilimitados' }, { t: 'Más IA y reglas automáticas' }],
+      vStyle: 'border-radius:16px;padding:16px 18px;background:' + (ok ? '#ECFDF3' : '#FFFBEB') + ';color:' + (ok ? '#14532D' : '#78350F'),
+      vTitle: ok ? 'Sí, podés comprarlo' : 'Ojo: te ajusta el mes',
+      vText: ok ? 'Cuota de ' + fm(cuota) + ' por mes. Tu disponible real queda en ' + fm(1482300 - cuota) + ' y ningún mes proyectado da negativo.'
+        : 'Pagás ' + fm(cuota) + ' de una vez y tu disponible baja a ' + fm(1482300 - cuota) + '. Con 3 cuotas respirás mejor.'
+    };
+  }
+}
+</script>
+</body>
+</html>

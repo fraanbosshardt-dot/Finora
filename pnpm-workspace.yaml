@@ -1,0 +1,11 @@
+packages:
+  - apps/*
+  - packages/*
+allowBuilds:
+  "@prisma/engines": true
+  prisma: true
+  embedded-postgres: true
+  "@embedded-postgres/windows-x64": true
+  esbuild: true
+minimumReleaseAgeExclude:
+  - lucide-react@1.54.0

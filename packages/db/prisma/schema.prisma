@@ -1,0 +1,404 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER_IN
+  TRANSFER_OUT
+  ADJUSTMENT_IN
+}
+
+model User {
+  id            String            @id @default(uuid()) @db.Uuid
+  email         String            @unique
+  name          String
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  emailVerified Boolean           @default(false)
+  image         String?
+  sessions      Session[]
+  authAccounts  AuthAccount[]
+  memberships   WorkspaceMember[]
+}
+
+model Session {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model AuthAccount {
+  id                    String    @id @default(uuid()) @db.Uuid
+  userId                String    @db.Uuid
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+}
+
+model Verification {
+  id         String   @id @default(uuid()) @db.Uuid
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+}
+
+model RateLimit {
+  id          String @id @default(uuid()) @db.Uuid
+  key         String @unique
+  count       Int
+  lastRequest BigInt
+}
+
+model Workspace {
+  id               String            @id @default(uuid()) @db.Uuid
+  name             String
+  country          String            @default("AR")
+  baseCurrency     String            @default("ARS") @db.VarChar(3)
+  timezone         String            @default("America/Argentina/Buenos_Aires")
+  members          WorkspaceMember[]
+  accounts         Account[]
+  categories       Category[]
+  transactions     Transaction[]
+  createdAt        DateTime          @default(now())
+  ownerId          String            @unique @db.Uuid
+  plan             String            @default("FREE")
+  proUntil         DateTime?
+  recurrences      Recurrence[]
+  installments     InstallmentPlan[]
+  budgets          Budget[]
+  goals            Goal[]
+  scenarios        Scenario[]
+  auditLogs        AuditLog[]
+  requestKeys      RequestKey[]
+  debts            Debt[]
+  cards            CreditCard[]
+  imports          ImportBatch[]
+  transfers        Transfer[]
+  rules            Rule[]
+  alertPreferences Json              @default("{}")
+  dismissedAlerts  DismissedAlert[]
+  fxRates          FxRate[]
+}
+
+model WorkspaceMember {
+  userId      String    @db.Uuid
+  workspaceId String    @db.Uuid
+  role        String    @default("owner")
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@id([userId, workspaceId])
+  @@index([workspaceId])
+}
+
+model Account {
+  id           String            @id @default(uuid()) @db.Uuid
+  workspaceId  String            @db.Uuid
+  name         String            @db.VarChar(80)
+  currency     String            @db.VarChar(3)
+  openingMinor Decimal           @db.Decimal(24, 0)
+  openingDate  DateTime          @db.Date
+  active       Boolean           @default(true)
+  kind         String            @default("bank")
+  liquid       Boolean           @default(true)
+  workspace    Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  transactions Transaction[]
+  recurrences  Recurrence[]
+  installments InstallmentPlan[]
+  debts        Debt[]
+  card         CreditCard?       @relation("CardAccount")
+  fundedCards  CreditCard[]      @relation("CardFunding")
+
+  @@unique([id, workspaceId])
+  @@index([workspaceId, active])
+}
+
+model Category {
+  rules        Rule[]
+  id           String            @id @default(uuid()) @db.Uuid
+  workspaceId  String            @db.Uuid
+  name         String            @db.VarChar(80)
+  group        String            @default("Personalizadas") @db.VarChar(80)
+  workspace    Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  transactions Transaction[]
+  recurrences  Recurrence[]
+  installments InstallmentPlan[]
+  budgets      Budget[]
+  debts        Debt[]
+
+  @@unique([id, workspaceId])
+  @@unique([workspaceId, name])
+}
+
+model Transaction {
+  id            String          @id @default(uuid()) @db.Uuid
+  workspaceId   String          @db.Uuid
+  accountId     String          @db.Uuid
+  categoryId    String          @db.Uuid
+  type          TransactionType
+  amountMinor   Decimal         @db.Decimal(24, 0)
+  description   String          @db.VarChar(140)
+  date          DateTime        @db.Date
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  occurrenceKey String?
+  transferId    String?         @db.Uuid
+  importBatchId String?         @db.Uuid
+  workspace     Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  account       Account         @relation(fields: [accountId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+  category      Category        @relation(fields: [categoryId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+  importBatch   ImportBatch?    @relation(fields: [importBatchId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+
+  @@unique([workspaceId, occurrenceKey])
+  @@index([workspaceId, date, id])
+  @@index([accountId, date])
+}
+
+model Recurrence {
+  id          String          @id @default(uuid()) @db.Uuid
+  workspaceId String          @db.Uuid
+  accountId   String          @db.Uuid
+  categoryId  String          @db.Uuid
+  description String          @db.VarChar(140)
+  type        TransactionType
+  amountMinor Decimal         @db.Decimal(24, 0)
+  startDate   DateTime        @db.Date
+  endDate     DateTime?       @db.Date
+  frequency   String
+  interval    Int             @default(1)
+  active      Boolean         @default(true)
+  workspace   Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  account     Account         @relation(fields: [accountId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+  category    Category        @relation(fields: [categoryId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+
+  @@index([workspaceId, active])
+}
+
+model ImportBatch {
+  id            String        @id @default(uuid()) @db.Uuid
+  workspaceId   String        @db.Uuid
+  importedCount Int           @default(0)
+  rolledBack    Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  workspace     Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  transactions  Transaction[]
+
+  @@unique([id, workspaceId])
+  @@index([workspaceId, createdAt])
+}
+
+model Transfer {
+  id            String    @id @db.Uuid
+  workspaceId   String    @db.Uuid
+  fromAccountId String    @db.Uuid
+  toAccountId   String    @db.Uuid
+  fromCurrency  String    @db.VarChar(3)
+  toCurrency    String    @db.VarChar(3)
+  sentMinor     Decimal   @db.Decimal(24, 0)
+  receivedMinor Decimal   @db.Decimal(24, 0)
+  feeMinor      Decimal   @db.Decimal(24, 0)
+  fxSource      String    @db.VarChar(80)
+  rateTimestamp DateTime
+  date          DateTime  @db.Date
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+}
+
+model InstallmentPlan {
+  id                 String    @id @default(uuid()) @db.Uuid
+  workspaceId        String    @db.Uuid
+  accountId          String    @db.Uuid
+  categoryId         String    @db.Uuid
+  description        String    @db.VarChar(140)
+  totalMinor         Decimal   @db.Decimal(24, 0)
+  downPaymentMinor   Decimal   @db.Decimal(24, 0)
+  purchaseDate       DateTime  @db.Date
+  firstDate          DateTime  @db.Date
+  count              Int
+  active             Boolean   @default(true)
+  repaymentAccountId String?   @db.Uuid
+  workspace          Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  account            Account   @relation(fields: [accountId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+  category           Category  @relation(fields: [categoryId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+
+  @@index([workspaceId, active])
+}
+
+model CreditCard {
+  accountId        String    @id @db.Uuid
+  workspaceId      String    @db.Uuid
+  fundingAccountId String    @db.Uuid
+  limitMinor       Decimal   @db.Decimal(24, 0)
+  closingDay       Int
+  dueDay           Int
+  workspace        Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  account          Account   @relation("CardAccount", fields: [accountId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+  fundingAccount   Account   @relation("CardFunding", fields: [fundingAccountId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+
+  @@unique([accountId, workspaceId])
+  @@index([workspaceId])
+}
+
+model Debt {
+  id               String             @id @default(uuid()) @db.Uuid
+  workspaceId      String             @db.Uuid
+  accountId        String             @db.Uuid
+  categoryId       String             @db.Uuid
+  name             String             @db.VarChar(80)
+  principalMinor   Decimal            @db.Decimal(24, 0)
+  receivedMinor    Decimal            @db.Decimal(24, 0)
+  chargesMinor     Decimal            @db.Decimal(24, 0)
+  monthlyRate      String
+  system           String
+  count            Int
+  disbursementDate DateTime           @db.Date
+  firstDate        DateTime           @db.Date
+  active           Boolean            @default(true)
+  workspace        Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  account          Account            @relation(fields: [accountId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+  category         Category           @relation(fields: [categoryId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+  extras           DebtExtraPayment[]
+
+  @@unique([id, workspaceId])
+  @@index([workspaceId])
+}
+
+model DebtExtraPayment {
+  id          String   @id @default(uuid()) @db.Uuid
+  debtId      String   @db.Uuid
+  workspaceId String   @db.Uuid
+  amountMinor Decimal  @db.Decimal(24, 0)
+  date        DateTime @db.Date
+  debt        Debt     @relation(fields: [debtId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
+
+  @@index([workspaceId])
+}
+
+model Budget {
+  id          String    @id @default(uuid()) @db.Uuid
+  workspaceId String    @db.Uuid
+  categoryId  String    @db.Uuid
+  month       String    @db.VarChar(7)
+  currency    String    @db.VarChar(3)
+  amountMinor Decimal   @db.Decimal(24, 0)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  category    Category  @relation(fields: [categoryId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+
+  @@unique([workspaceId, categoryId, month, currency])
+}
+
+model Goal {
+  id          String    @id @default(uuid()) @db.Uuid
+  workspaceId String    @db.Uuid
+  name        String    @db.VarChar(80)
+  currency    String    @db.VarChar(3)
+  targetMinor Decimal   @db.Decimal(24, 0)
+  savedMinor  Decimal   @db.Decimal(24, 0)
+  targetDate  DateTime  @db.Date
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+}
+
+model Scenario {
+  id          String    @id @default(uuid()) @db.Uuid
+  workspaceId String    @db.Uuid
+  name        String    @db.VarChar(80)
+  events      Json
+  createdAt   DateTime  @default(now())
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+}
+
+model AuditLog {
+  id          String    @id @default(uuid()) @db.Uuid
+  workspaceId String    @db.Uuid
+  userId      String    @db.Uuid
+  action      String
+  resourceId  String?
+  createdAt   DateTime  @default(now())
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, createdAt])
+}
+
+model RequestKey {
+  workspaceId String    @db.Uuid
+  key         String    @db.Uuid
+  payloadHash String
+  createdAt   DateTime  @default(now())
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@id([workspaceId, key])
+}
+
+model Rule {
+  id          String    @id @default(uuid()) @db.Uuid
+  workspaceId String    @db.Uuid
+  name        String    @db.VarChar(80)
+  contains    String    @db.VarChar(80)
+  categoryId  String    @db.Uuid
+  accountId   String?   @db.Uuid
+  type        String
+  priority    Int       @default(0)
+  active      Boolean   @default(true)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  category    Category  @relation(fields: [categoryId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+
+  @@index([workspaceId, active])
+}
+
+model DismissedAlert {
+  workspaceId String    @db.Uuid
+  key         String    @db.VarChar(200)
+  createdAt   DateTime  @default(now())
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@id([workspaceId, key])
+}
+
+model FxRate {
+  id          String    @id @default(uuid()) @db.Uuid
+  workspaceId String    @db.Uuid
+  base        String    @db.VarChar(3)
+  quote       String    @db.VarChar(3)
+  rate        String    @db.VarChar(25)
+  date        DateTime  @db.Date
+  source      String    @db.VarChar(80)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, date])
+}

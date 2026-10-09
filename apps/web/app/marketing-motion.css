@@ -1,0 +1,35 @@
+/* Public website: one-time reveals and lightweight hover feedback. */
+@keyframes marketing-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .dc-site .dc-rise > * {
+    animation: marketing-reveal 0.45s both;
+  }
+  .dc-site .dc-rise > *:nth-child(2) {
+    animation-delay: 0.06s;
+  }
+  .dc-site .dc-rise > *:nth-child(3) {
+    animation-delay: 0.12s;
+  }
+  .dc-site .dc-icon {
+    transition: transform 0.2s;
+  }
+  .dc-site .dc-hover:hover .dc-icon {
+    transform: translateY(-2px);
+  }
+  .dc-site .dc-faq details[open] p {
+    animation: marketing-reveal 0.2s both;
+  }
+}
+/* The product preview stays static, on desktop and mobile. */
+.dc-site .dc-preview {
+  animation: none;
+}

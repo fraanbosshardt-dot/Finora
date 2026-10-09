@@ -1,0 +1,26 @@
+{
+  "name": "finora",
+  "private": true,
+  "packageManager": "pnpm@11.25.0",
+  "scripts": {
+    "dev": "pnpm --filter @finora/web dev",
+    "build": "pnpm db:generate && turbo run build",
+    "typecheck": "pnpm db:generate && turbo run typecheck",
+    "test": "turbo run test",
+    "db:local": "node scripts/local-postgres.mjs",
+    "db:backup": "node scripts/database-backup.mjs backup",
+    "db:verify-backup": "node scripts/database-backup.mjs verify",
+    "db:restore": "node scripts/database-backup.mjs restore",
+    "db:generate": "pnpm --filter @finora/db generate",
+    "db:migrate": "pnpm --filter @finora/db migrate:deploy",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "turbo": "2.11.7",
+    "typescript": "7.0.2",
+    "@types/node": "^24.0.0",
+    "embedded-postgres": "17.10.0-beta.17",
+    "@playwright/test": "1.64.0",
+    "tsx": "4.23.15"
+  }
+}

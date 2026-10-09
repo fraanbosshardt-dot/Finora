@@ -1,0 +1,1 @@
+{"name":"@finora/core","version":"0.0.1","private":true,"exports":{".":"./src/index.ts"},"scripts":{"test":"vitest run","typecheck":"tsc -p tsconfig.json"},"dependencies":{"zod":"4.6.5"},"devDependencies":{"vitest":"5.0.3"}}

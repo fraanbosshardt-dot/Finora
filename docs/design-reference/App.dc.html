@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Finora — App móvil</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+.app{font-family:'Manrope',system-ui,sans-serif;font-variant-numeric:tabular-nums;color:#111827}
+.app button{font-family:inherit;cursor:pointer;transition:transform .15s ease,background .2s ease,box-shadow .2s ease}
+.app button:active{transform:scale(.96)}
+.app button:focus-visible{outline:3px solid #16A085;outline-offset:2px}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes sheet{from{transform:translateY(100%)}to{transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes grow{from{transform:scaleY(.1)}to{transform:scaleY(1)}}
+.screen>*{animation:up .45s cubic-bezier(.2,.8,.2,1) both}
+.screen>*:nth-child(2){animation-delay:.06s}.screen>*:nth-child(3){animation-delay:.12s}.screen>*:nth-child(4){animation-delay:.18s}.screen>*:nth-child(5){animation-delay:.24s}
+.sheet{animation:sheet .35s cubic-bezier(.2,.8,.2,1)}
+.veil{animation:fade .25s ease}
+.bar{transform-origin:bottom;animation:grow .7s cubic-bezier(.2,.8,.2,1) both}
+.fab{box-shadow:0 10px 24px rgba(15,118,110,.35)}
+.fab:hover{box-shadow:0 14px 30px rgba(15,118,110,.45)}
+@media (prefers-reduced-motion:reduce){.app *{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div class="app" style="position:relative;width:390px;height:844px;box-sizing:border-box;background:#F7F8FA;overflow:hidden;display:flex;flex-direction:column">
+
+<div class="screen" style="flex:1;overflow-y:auto;padding:56px 20px 110px;display:flex;flex-direction:column;gap:16px">
+
+<sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<div><div style="font-size:14px;color:#667085;font-weight:600">Buenas tardes</div><div style="font-size:22px;font-weight:800">Hola, Fran</div></div>
+<div aria-hidden="true" style="width:44px;height:44px;border-radius:22px;background:#E6F4F1;color:#0F766E;display:flex;align-items:center;justify-content:center;font-weight:800">F</div>
+</div>
+<div style="background:linear-gradient(145deg,#0F766E,#16A085);color:#fff;border-radius:24px;padding:22px;box-shadow:0 12px 28px rgba(15,118,110,.25)">
+<div style="font-size:14px;font-weight:600;opacity:.92">Disponible real</div>
+<div style="font-size:38px;font-weight:800;letter-spacing:-.02em;margin:4px 0">{{avail}}</div>
+<div style="font-size:13px;opacity:.92">Después de compromisos próximos</div>
+<div style="display:flex;gap:8px;margin-top:16px">
+<button onClick="{{openBuy}}" style="flex:1;min-height:44px;border:0;border-radius:14px;background:#fff;color:#0F766E;font-weight:800;font-size:14px">¿Puedo comprarlo?</button>
+<button onClick="{{openSheet}}" style="flex:1;min-height:44px;border:1.5px solid rgba(255,255,255,.6);border-radius:14px;background:transparent;color:#fff;font-weight:700;font-size:14px">Registrar</button>
+</div>
+</div>
+<div style="background:#fff;border-radius:20px;padding:18px;box-shadow:0 1px 3px rgba(16,24,40,.06)">
+<div style="font-weight:800;margin-bottom:10px">Octubre</div>
+<sc-for list="{{month}}" as="r" hint-placeholder-count="4">
+<div style="display:flex;justify-content:space-between;padding:7px 0;font-size:14px"><span style="color:#667085">{{r.l}}</span><span style="font-weight:700">{{r.v}}</span></div>
+</sc-for>
+<div style="display:flex;justify-content:space-between;border-top:1px solid #E5E7EB;margin-top:6px;padding-top:12px;font-weight:800"><span>Proyección de cierre</span><span style="color:#15803D">+$1.483.300</span></div>
+</div>
+<div style="background:#fff;border-radius:20px;padding:18px;box-shadow:0 1px 3px rgba(16,24,40,.06)">
+<div style="font-weight:800;margin-bottom:6px">Próximamente</div>
+<sc-for list="{{soon}}" as="s" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:12px;padding:9px 0">
+<div style="width:44px;text-align:center;background:#F3F4F6;border-radius:12px;padding:6px 0;font-size:11px;font-weight:700;color:#667085">{{s.d}}</div>
+<div style="flex:1;font-weight:600;font-size:14px">{{s.n}}</div><div style="font-weight:700;font-size:14px">{{s.a}}</div>
+</div>
+</sc-for>
+</div>
+<div style="background:#fff;border-radius:20px;padding:18px;box-shadow:0 1px 3px rgba(16,24,40,.06)">
+<div style="display:flex;justify-content:space-between;font-weight:800"><span>Primeros pasos</span><span style="color:#0F766E">{{chkDone}} de 5</span></div>
+<sc-for list="{{chk}}" as="c" hint-placeholder-count="5">
+<button onClick="{{c.pick}}" style="width:100%;min-height:48px;display:flex;align-items:center;gap:12px;border:0;background:transparent;padding:0;text-align:left;font-size:14px;font-weight:600;color:#111827"><span aria-hidden="true" style="{{c.dot}}">{{c.mark}}</span>{{c.l}}</button>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{isMov}}" hint-placeholder-val="{{ false }}">
+<div style="font-size:24px;font-weight:800">Movimientos</div>
+<div style="display:flex;gap:8px">
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="3">
+<button onClick="{{f.pick}}" style="{{f.style}}">{{f.l}}</button>
+</sc-for>
+</div>
+<div style="background:#fff;border-radius:20px;padding:6px 16px;box-shadow:0 1px 3px rgba(16,24,40,.06)">
+<sc-for list="{{txs}}" as="t" hint-placeholder-count="5">
+<div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #F1F2F4">
+<div aria-hidden="true" style="width:42px;height:42px;border-radius:14px;background:#E6F4F1;color:#0F766E;display:flex;align-items:center;justify-content:center;font-weight:800">{{t.i}}</div>
+<div style="flex:1"><div style="font-weight:700;font-size:14px">{{t.n}}</div><div style="font-size:12px;color:#667085">{{t.c}}</div></div>
+<div style="{{t.style}}">{{t.a}}</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{isPlan}}" hint-placeholder-val="{{ false }}">
+<div style="font-size:24px;font-weight:800">Planificación</div>
+<div style="background:#fff;border-radius:20px;padding:18px;box-shadow:0 1px 3px rgba(16,24,40,.06)">
+<div style="font-weight:800">Resultado proyectado</div>
+<div style="font-size:13px;color:#667085;margin-bottom:14px">Próximos 6 meses, en millones de pesos</div>
+<div style="display:flex;align-items:flex-end;gap:10px;height:120px">
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;justify-content:flex-end;height:100%">
+<div style="font-size:11px;font-weight:700">{{b.v}}</div>
+<div class="bar" style="{{b.style}}"></div>
+<div style="font-size:11px;color:#667085">{{b.m}}</div>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="background:#fff;border-radius:20px;padding:18px;box-shadow:0 1px 3px rgba(16,24,40,.06)">
+<div style="display:flex;justify-content:space-between;font-weight:800"><span>Fondo de emergencia</span><span>62%</span></div>
+<div style="height:10px;border-radius:5px;background:#E5E7EB;margin:12px 0 8px;overflow:hidden"><div class="bar" style="width:62%;height:100%;background:#16A085;border-radius:5px;transform-origin:left"></div></div>
+<div style="font-size:13px;color:#667085">Aporte sugerido: $120.000 por mes para llegar en marzo</div>
+</div>
+<div style="background:#fff;border-radius:20px;padding:18px;box-shadow:0 1px 3px rgba(16,24,40,.06)">
+<div style="display:flex;justify-content:space-between;font-weight:800"><span>Préstamo personal</span><span>$97.700 / mes</span></div>
+<div style="height:10px;border-radius:5px;background:#E5E7EB;margin:12px 0 8px;overflow:hidden"><div class="bar" style="width:33%;height:100%;background:#0F766E;border-radius:5px;transform-origin:left"></div></div>
+<div style="font-size:13px;color:#667085">Cuota 8 de 24. Podés simular una cancelación anticipada antes de decidir.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isAcc}}" hint-placeholder-val="{{ false }}">
+<div style="font-size:24px;font-weight:800">Cuentas</div>
+<div style="background:#111827;color:#fff;border-radius:24px;padding:20px">
+<div style="font-size:13px;opacity:.8;font-weight:600">Patrimonio neto</div>
+<div style="font-size:32px;font-weight:800;margin-top:2px">{{pat}}</div>
+<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px"><sc-for list="{{curs}}" as="c" hint-placeholder-count="3"><button onClick="{{c.pick}}" style="{{c.style}}">{{c.l}}</button></sc-for></div>
+</div>
+<div style="background:#fff;border-radius:20px;padding:6px 16px;box-shadow:0 1px 3px rgba(16,24,40,.06)">
+<sc-for list="{{accounts}}" as="a" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid #F1F2F4">
+<div aria-hidden="true" style="width:42px;height:42px;border-radius:14px;background:#E6F4F1;color:#0F766E;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">{{a.cur}}</div>
+<div style="flex:1;font-weight:700;font-size:14px">{{a.n}}</div><div style="font-weight:700;font-size:14px">{{a.s}}</div>
+</div>
+</sc-for>
+</div>
+<div style="background:#fff;border-radius:20px;padding:18px;box-shadow:0 1px 3px rgba(16,24,40,.06)">
+<div style="display:flex;justify-content:space-between;font-weight:800"><span>Visa</span><span>$480.000</span></div>
+<div style="font-size:12px;color:#667085;margin:2px 0 8px">Próximo resumen, vence el 05 Oct</div>
+<sc-for list="{{cards}}" as="k" hint-placeholder-count="3">
+<div style="display:flex;justify-content:space-between;padding:8px 0;font-size:14px"><span style="font-weight:600">{{k.n}} <span style="color:#667085;font-weight:500">· {{k.c}}</span></span><span style="font-weight:700">{{k.a}}</span></div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{isAi}}" hint-placeholder-val="{{ false }}">
+<div style="font-size:24px;font-weight:800">Preguntale a Finora</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{questions}}" as="q" hint-placeholder-count="3">
+<button onClick="{{q.pick}}" style="{{q.style}}">{{q.l}}</button>
+</sc-for>
+</div>
+<div style="background:#E6F4F1;border-radius:20px;padding:18px;font-size:14px;line-height:1.5;color:#0B4F49">{{answer}}</div>
+</sc-if>
+
+</div>
+
+<nav aria-label="Navegación principal" style="position:absolute;left:0;right:0;bottom:0;height:84px;background:rgba(255,255,255,.96);border-top:1px solid #E5E7EB;display:flex;padding:8px 6px 22px;box-sizing:border-box">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="5">
+<button onClick="{{t.pick}}" aria-label="{{t.l}}" style="{{t.style}}">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{t.d}}"></path></svg>
+<span style="font-size:10.5px;font-weight:700">{{t.l}}</span>
+</button>
+</sc-for>
+</nav>
+<button class="fab" onClick="{{openSheet}}" aria-label="Agregar movimiento" style="position:absolute;right:20px;bottom:100px;width:56px;height:56px;border:0;border-radius:28px;background:#0F766E;color:#fff;display:flex;align-items:center;justify-content:center">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+</button>
+
+<sc-if value="{{sheetOpen}}" hint-placeholder-val="{{ false }}">
+<div class="veil" onClick="{{closeAll}}" style="position:absolute;inset:0;background:rgba(17,24,39,.45)"></div>
+<div class="sheet" style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:28px 28px 0 0;padding:20px 20px 34px">
+<div style="width:40px;height:4px;border-radius:2px;background:#D1D5DB;margin:0 auto 16px"></div>
+<div style="font-size:18px;font-weight:800;margin-bottom:12px">¿Qué querés registrar?</div>
+<sc-for list="{{actions}}" as="a" hint-placeholder-count="5">
+<button onClick="{{closeAll}}" style="width:100%;min-height:52px;display:flex;align-items:center;gap:12px;border:0;background:transparent;padding:0 4px;font-size:15px;font-weight:700;color:#111827;text-align:left;border-radius:14px">
+<span aria-hidden="true" style="width:40px;height:40px;border-radius:12px;background:#E6F4F1;color:#0F766E;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800">{{a.i}}</span>{{a.l}}
+</button>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{buyOpen}}" hint-placeholder-val="{{ false }}">
+<div class="veil" onClick="{{closeAll}}" style="position:absolute;inset:0;background:rgba(17,24,39,.45)"></div>
+<div class="sheet" style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:28px 28px 0 0;padding:20px 20px 34px">
+<div style="width:40px;height:4px;border-radius:2px;background:#D1D5DB;margin:0 auto 16px"></div>
+<div style="font-size:18px;font-weight:800">¿Puedo comprarlo?</div>
+<div style="font-size:13px;color:#667085;margin:2px 0 14px">Celular nuevo por $480.000 con Visa</div>
+<div style="display:flex;gap:8px">
+<sc-for list="{{cuotas}}" as="c" hint-placeholder-count="4">
+<button onClick="{{c.pick}}" style="{{c.style}}">{{c.l}}</button>
+</sc-for>
+</div>
+<div style="{{verdictStyle}}">
+<div style="font-weight:800;font-size:16px">{{verdictTitle}}</div>
+<div style="font-size:13px;margin-top:4px;line-height:1.45">{{verdictText}}</div>
+</div>
+<button onClick="{{closeAll}}" style="width:100%;min-height:48px;margin-top:14px;border:0;border-radius:14px;background:#0F766E;color:#fff;font-weight:800;font-size:15px">Listo</button>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  state = { tab: 'home', sheet: false, buy: false, n: 3, fil: 'Todos', q: 0, cur: 'ARS', chk: [true, false, false, false, false] };
+  renderVals() {
+    const s = this.state, set = (o) => () => this.setState(o);
+    const nav = [
+      { id: 'home', l: 'Inicio', d: 'M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
+      { id: 'mov', l: 'Movimientos', d: 'M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3' },
+      { id: 'plan', l: 'Planificación', d: 'M4 20V10M10 20V4M16 20v-7M22 20H2' },
+      { id: 'acc', l: 'Cuentas', d: 'M3 7h18v12H3zM3 7l3-3h12l3 3M16 13h2' },
+      { id: 'ai', l: 'IA', d: 'M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z' }
+    ].map((t) => ({ ...t, pick: set({ tab: t.id }),
+      style: 'flex:1;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:44px;border-radius:12px;color:' + (s.tab === t.id ? '#0F766E' : '#667085') }));
+    const all = [
+      { i: 'N', n: 'Nafta YPF', c: 'Combustible · Visa', a: '-$48.000', g: 'Gastos' },
+      { i: 'S', n: 'Sueldo', c: 'Ingreso · Galicia', a: '+$2.800.000', g: 'Ingresos', pos: 1 },
+      { i: 'C', n: 'Coto', c: 'Supermercado · Efectivo', a: '-$36.400', g: 'Gastos' },
+      { i: 'P', n: 'Panadería', c: 'Alimentos · Mercado Pago', a: '-$5.200', g: 'Gastos' },
+      { i: 'F', n: 'Freelance', c: 'Ingreso · Mercado Pago', a: '+$501.000', g: 'Ingresos', pos: 1 }
+    ];
+    const txs = all.filter((t) => s.fil === 'Todos' || t.g === s.fil).map((t) => ({ ...t,
+      style: 'font-weight:800;font-size:14px;color:' + (t.pos ? '#15803D' : '#111827') }));
+    const filters = ['Todos', 'Gastos', 'Ingresos'].map((l) => ({ l, pick: set({ fil: l }),
+      style: 'min-height:40px;padding:0 16px;border-radius:20px;font-weight:700;font-size:13px;border:1.5px solid ' + (s.fil === l ? '#0F766E' : '#E5E7EB') + ';background:' + (s.fil === l ? '#0F766E' : '#fff') + ';color:' + (s.fil === l ? '#fff' : '#111827') }));
+    const bars = [['Oct', 1.5], ['Nov', 1.2], ['Dic', 0.6], ['Ene', 1.1], ['Feb', 1.4], ['Mar', 1.8]].map(([m, v]) => ({ m, v: v.toFixed(1),
+      style: 'width:100%;border-radius:8px;height:' + Math.round(v * 44) + 'px;background:' + (v < 0.8 ? '#F59E0B' : '#16A085') }));
+    const qs = [
+      ['¿En qué gasté más este mes?', 'Tu mayor gasto fue Alquiler: $500.000, el 40% de tus egresos de octubre. Le siguen Cuotas y tarjetas, con $577.700 comprometidos.'],
+      ['¿Cuánto puedo gastar por día?', 'Con tu disponible real de $1.482.300 y 21 días hasta fin de mes, podés gastar hasta $70.600 por día sin tocar compromisos.'],
+      ['¿Cuándo termino mis cuotas?', 'Tu última cuota vence en marzo. Hasta entonces pagás $577.700 por mes entre tarjeta y préstamo.']
+    ];
+    const questions = qs.map(([l], i) => ({ l, pick: set({ q: i }),
+      style: 'min-height:48px;text-align:left;padding:0 16px;border-radius:16px;font-weight:700;font-size:14px;border:1.5px solid ' + (s.q === i ? '#0F766E' : '#E5E7EB') + ';background:#fff;color:#111827' }));
+    const price = 480000, cuota = Math.round(price / s.n);
+    const chk = ['Crear una cuenta', 'Registrar un ingreso', 'Registrar un gasto', 'Agregar un compromiso futuro', 'Probar ¿Puedo comprarlo?'].map((l, i) => ({ l, mark: s.chk[i] ? '✓' : '',
+      pick: () => { const a = s.chk.slice(); a[i] = !a[i]; this.setState({ chk: a }); },
+      dot: 'width:24px;height:24px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;box-sizing:border-box;' + (s.chk[i] ? 'background:#0F766E;color:#fff' : 'border:2px solid #D1D5DB') }));
+    const rate = { ARS: 1, 'USD MEP': 1480, 'USD oficial': 1390 }[s.cur], pv = 8912400 / rate;
+    const pat = s.cur === 'ARS' ? '$' + Math.round(pv).toLocaleString('es-AR') : 'US$ ' + Math.round(pv).toLocaleString('es-AR');
+    const curs = ['ARS', 'USD MEP', 'USD oficial'].map((l) => ({ l, pick: set({ cur: l }),
+      style: 'min-height:44px;padding:0 14px;border-radius:22px;border:0;font-weight:700;font-size:12px;background:' + (s.cur === l ? '#fff' : 'rgba(255,255,255,.14)') + ';color:' + (s.cur === l ? '#111827' : '#fff') }));
+    const fm = (v) => '$' + v.toLocaleString('es-AR');
+    const ok = s.n >= 3;
+    const cuotas = [1, 3, 6, 12].map((n) => ({ l: n === 1 ? '1 pago' : n + ' cuotas', pick: set({ n }),
+      style: 'flex:1;min-height:44px;border-radius:14px;font-weight:700;font-size:13px;border:1.5px solid ' + (s.n === n ? '#0F766E' : '#E5E7EB') + ';background:' + (s.n === n ? '#E6F4F1' : '#fff') + ';color:' + (s.n === n ? '#0F766E' : '#111827') }));
+    return {
+      isHome: s.tab === 'home', isMov: s.tab === 'mov', isPlan: s.tab === 'plan', isAcc: s.tab === 'acc', isAi: s.tab === 'ai',
+      tabs: nav, txs, filters, bars, questions, answer: qs[s.q][1], cuotas,
+      avail: '$1.482.300', chk, chkDone: s.chk.filter(Boolean).length, curs, pat,
+      cards: [{ n: 'Celular', c: 'cuota 3 de 12', a: '$40.000' }, { n: 'Zapatillas', c: 'cuota 1 de 6', a: '$25.000' }, { n: 'Heladera', c: 'cuota 9 de 12', a: '$62.700' }],
+      month: [{ l: 'Ingresos', v: '$3.301.000' }, { l: 'Gastos', v: '$1.240.000' }, { l: 'Cuotas y deudas', v: '$577.700' }],
+      soon: [{ d: '05 OCT', n: 'Visa', a: '$480.000' }, { d: '10 OCT', n: 'Alquiler', a: '$500.000' }, { d: '18 OCT', n: 'Seguro', a: '$87.000' }],
+      accounts: [{ cur: 'ARS', n: 'Galicia', s: '$3.420.000' }, { cur: 'ARS', n: 'Mercado Pago', s: '$612.400' }, { cur: 'USD', n: 'Efectivo USD', s: 'US$ 1.250' }, { cur: 'BTC', n: 'Ledger', s: '0,025 BTC' }],
+      actions: [{ i: '-', l: 'Gasto' }, { i: '+', l: 'Ingreso' }, { i: '⇄', l: 'Transferencia' }, { i: '%', l: 'Compra en cuotas' }, { i: '!', l: 'Deuda o crédito' }],
+      sheetOpen: s.sheet, buyOpen: s.buy,
+      openSheet: set({ sheet: true }), openBuy: set({ buy: true, n: 3 }), closeAll: set({ sheet: false, buy: false }),
+      verdictStyle: 'margin-top:16px;border-radius:16px;padding:14px 16px;background:' + (ok ? '#ECFDF3' : '#FFFBEB') + ';color:' + (ok ? '#14532D' : '#78350F'),
+      verdictTitle: ok ? 'Sí, podés comprarlo' : 'Ojo: te ajusta el mes',
+      verdictText: ok ? 'Cuota de ' + fm(cuota) + ' por mes. Tu disponible real queda en ' + fm(1482300 - cuota) + ' y ningún mes proyectado da negativo.'
+        : 'Pagás ' + fm(cuota) + ' de una vez. Tu disponible baja a ' + fm(1482300 - cuota) + ' y noviembre queda justo. Con 3 cuotas respirás mejor.'
+    };
+  }
+}
+</script>
+</body>
+</html>
